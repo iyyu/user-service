@@ -1,0 +1,14 @@
+CREATE DATABASE capstone;
+
+CREATE TABLE IF NOT EXISTS "users" (
+  "id" SERIAL NOT NULL PRIMARY KEY,
+  "username" MEDIUMTEXT(50) NOT NULL,
+  "email" MEDIUMTEXT(200) NOT NULL,
+  "country" MEDIUMTEXT(50) NOT NULL,
+  "birthdate" MEDIUMTEXT(50) NULL DEFAULT NULL,
+  "lastLogin" MEDIUMTEXT(50) NOT NULL,
+  "type" MEDIUMTEXT(25) NOT NULL,
+  "product" MEDIUMTEXT(25) NOT NULL,
+  "image" MEDIUMTEXT(500) NULL DEFAULT NULL
+  -- UNIQUE KEY ("id", "email", "username"),
+);
