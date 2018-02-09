@@ -8,27 +8,25 @@ client.connect()
 .catch(err => console.error('Error connecting to the database', err.stack));
 
 
-// insertion queries
-const insertToUsers = (values) => {
+/* Insertion queries */
+const insertToUsers = values => {
   const query = {
-    text: 'INSERT INTO users (username, email, country, birthdate, lastLogin, type, product) values ($1, $2, $3, $4, $5, $6, $7)',
+    text: 'INSERT INTO users (username, email, country, birthdate, lastlogin, isartist, ispremium, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
     values: [values]
   }
   return new Promise ((resolve, reject) => {
     console.time('insertion');
     client.query(query)
-    .then(res => {
+    .then(results => {
       console.timeEnd('insertion');
-      resolve(res);
+      resolve(results);
     })
-    .catch(e => console.error(e.stack));
+    .catch(err => console.error(err.stack));
   });
 }
-    
 
-
-// selection queries
-const selectUserByUserId = (userId) => {
+/* Selection queries */
+const selectUserByUserId = userId => {
   console.time(`search for ${userId}`);
   const query = {
     text: 'SELECT * FROM users WHERE id = $1',
@@ -36,14 +34,13 @@ const selectUserByUserId = (userId) => {
   }
   return new Promise((resolve, reject) => {
     client.query(query)
-    .then(res => {
+    .then(results => {
       console.timeEnd(`search for ${userId}`);
-      resolve(res.rows[0]);
+      resolve(results.rows[0]);
     })
-    .catch(e => console.error(e.stack));
+    .catch(err => console.error(err.stack));
   });
 }
-
 
 module.exports = {
   insertToUsers,

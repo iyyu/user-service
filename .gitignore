@@ -7,9 +7,10 @@ config/test.json
 # OS X
 .DS_Store
 
-# Logs
+# Logs and Notes
 logs
 *.log
+notes.md
 
 # Runtime data
 pids

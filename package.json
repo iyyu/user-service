@@ -4,6 +4,7 @@
   "description": "Spotifred services unite!",
   "main": "client/index.js",
   "scripts": {
+    "start": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -30,7 +31,11 @@
     "koa": "^2.0.0-alpha.8",
     "koa-router": "^7.1.1",
     "moment": "^2.20.1",
+    "newrelic": "^2.7.0",
     "nodemon": "^1.14.12",
     "pg": "^7.4.1"
+  },
+  "devDependencies": {
+    "chai-http": "^3.0.0"
   }
 }
