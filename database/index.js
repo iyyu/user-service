@@ -1,47 +1,60 @@
 require("dotenv").load();
-require("newrelic");
-const db = require('./../database/index.js');
-const express = require('express');
-const app = express();
-const toDate = require('normalize-date');
-const timestamp = require('unix-timestamp');
-const bodyParser = require('body-parser');
-const PORT = process.env.PORT;
+const pg = require('pg');
+const connectionString = process.env.DATABASE_URL;
+const client = new pg.Client(connectionString);
 
-app.use(bodyParser.json());
+client
+  .connect()
+  .then(() => console.log('Connected to the database!'))
+  .catch(err => console.error('Error connecting to the database', err.stack));
 
-app.get("/", (req, res) => res.status(200).end());
+/* Insertion queries */
+const insertToUsers = obj => {
+  const query = {
+    text: "INSERT INTO users (username, email, country, birthdate, lastlogin, isartist, ispremium, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+    values: [obj.username, obj.email, obj.country, obj.birthdate, obj.lastlogin, obj.isartist, obj.ispremium, obj.image]
+  };
+  return new Promise((resolve, reject) => {
+    console.time(`insertion of ${obj.username}`);
+    client
+      .query(query)
+      .then(newUserProfile => {
+        console.timeEnd(`insertion of ${obj.username}`);
+        resolve(newUserProfile);
+      })
+      .catch(err => {
+        console.error(err.stack);
+        reject(err);
+      });
+  });
+}
 
-app.get('/users/profile/:userId', (req, res) => {
-  db
-    .selectUserByUserId(req.params.userId)
-    .then(userProfile => res.send(userProfile))
-    .catch(err => res.status(404).send(`Error getting user profile for ${req.params.userId} from the database`));
-});
-
-app.get('/users/active/:startDate/:endDate', (req, res) => {
-  // convert the startDate and endDate to Javascript Date time, and then UNIX time
-  let startDate = timestamp.fromDate(toDate(req.params.startDate));
-  let endDate = timestamp.fromDate(toDate(req.params.endDate));
-
-  if (JSON.stringify(startDate) === 'null' || JSON.stringify(endDate) === 'null') {
-    res.send(`Error parsing dates for ${req.params.startDate} and ${req.params.endDate}`);
-  } else {
-    db
-      .selectActiveUsersByDates(startDate, endDate)
-      .then(activeUsers => console.log('activeUsers', activeUsers));
+/* Selection queries */
+const selectUserByUserId = userId => {
+  console.time(`search for ${userId}`);
+  const query = {
+    text: 'SELECT * FROM users WHERE id = $1',
+    values: [userId]
   }
-});
+  return new Promise((resolve, reject) => {
+    client
+      .query(query)
+      .then(results => {
+        if (results.rows.length) {
+          console.timeEnd(`search for ${userId}`);
+          resolve(results.rows[0]);
+        } else {
+          reject(results);
+        }
+      })
+      .catch(err => {
+        console.error(err.stack);
+        reject(err);
+      });
+  });
+}
 
-app.post('/users/profile', (req, res) => {
-  req.body.lastlogin = req.body.lastlogin || Date.now();
-  req.body.image = req.body.image || "https://www.poynter.org/sites/default/files/wp-content/uploads/2012/09/default_profile_2_reasonably_small.png";
-  db
-    .insertToUsers(req.body)
-    .then(newUserProfile => res.send(newUserProfile))
-    .catch(err => res.status(404).send('Error inserting into database'));
-});
-
-app.listen(PORT, () => {
-  console.log(`Ready on ${PORT}`);
-});
+module.exports = {
+  insertToUsers,
+  selectUserByUserId
+}
