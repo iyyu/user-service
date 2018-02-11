@@ -5,7 +5,11 @@
   "main": "client/index.js",
   "scripts": {
     "start": "nodemon server/index.js",
+<<<<<<< HEAD
     "test": "nyc mocha"
+=======
+    "test": "echo \"Error: no test specified\" && exit 1"
+>>>>>>> c33ce31237ab90f2e72d9253e91e465b94dc93d0
   },
   "repository": {
     "type": "git",
