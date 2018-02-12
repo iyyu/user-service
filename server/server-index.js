@@ -1,6 +1,6 @@
 require("dotenv").load();
 require("newrelic");
-const db = require('./../database/index.js');
+const db = require('./../database/db-index.js');
 const express = require('express');
 const app = express();
 const toDate = require('normalize-date');
@@ -23,7 +23,6 @@ app.get('/users/active/:startDate/:endDate', (req, res) => {
   // convert the startDate and endDate to Javascript Date time, and then UNIX time
   let startDate = timestamp.fromDate(toDate(req.params.startDate));
   let endDate = timestamp.fromDate(toDate(req.params.endDate));
-
   if (JSON.stringify(startDate) === 'null' || JSON.stringify(endDate) === 'null') {
     res.send(`Error parsing dates for ${req.params.startDate} and ${req.params.endDate}`);
   } else {
@@ -43,3 +42,5 @@ app.post('/users/profile', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Ready on ${PORT}`);
 });
+
+module.exports = app;

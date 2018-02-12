@@ -55,6 +55,7 @@ const selectUserByUserId = userId => {
 }
 
 module.exports = {
+  client,
   insertToUsers,
   selectUserByUserId
 }
