@@ -54,8 +54,63 @@ const selectUserByUserId = userId => {
   });
 }
 
+const selectUserByEmail = userEmail => {
+  console.time(`search for ${userEmail}`);
+  let query = {
+    text: "SELECT * FROM users WHERE email = $1",
+    values: [JSON.parse(userEmail)] // needed to not be a string since PostgreSQL is preferential to single-quotes and passing the email in would have resulted in double-quotes
+  };
+  return new Promise((resolve, reject) => {
+    client
+      .query(query)
+      .then(results => {
+        if (results.rows.length) {
+          console.timeEnd(`search for ${userEmail}`);
+          resolve(results.rows[0]);
+        } else {
+          resolve(results.rows);
+        }
+      })
+      .catch(err => {
+        console.error(err.stack);
+        reject(err);
+      });
+  });
+};
+
+const selectActiveUsersByDates = (startUnix, endUnix) => {
+  console.time(`search for users active between ${startUnix} and ${endUnix}`);
+  let query = {
+    text: "SELECT * FROM users WHERE lastlogin BETWEEN $1 AND $2",
+    values: [startUnix, endUnix]
+  };
+  return new Promise((resolve, reject) => {
+    client
+      .query(query)
+      .then(results => {
+        if (results.rows.length) {
+          console.timeEnd(`search for users active between ${startUnix} and ${endUnix}`);
+          resolve(results.rows);
+        } else {
+          console.timeEnd(`search for users active between ${startUnix} and ${endUnix}`);
+          resolve(results.rows);
+        }
+      })
+      .catch(err => {
+        console.timeEnd(`search for users active between ${startUnix} and ${endUnix}`);
+        console.error(err.stack);
+        reject(err);
+      });
+  });
+};
+
+
+
+
 module.exports = {
   client,
   insertToUsers,
-  selectUserByUserId
-}
+  selectUserByUserId,
+  selectUserByEmail,
+  selectActiveUsersByDates
+};

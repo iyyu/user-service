@@ -2,9 +2,9 @@
   "name": "spotifred",
   "version": "1.0.0",
   "description": "Spotifred services unite!",
-  "main": "client/index.js",
+  "main": "server/server-index.js",
   "scripts": {
-    "start": "NODE_ENV=production nodemon server/index.js",
+    "start": "NODE_ENV=production nodemon server/server-index.js",
     "test": "NODE_ENV=test mocha --exit",
     "test-coverage": "NODE_ENV=test nyc mocha --exit"
   },

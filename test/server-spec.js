@@ -20,7 +20,7 @@ describe('Basic server functionality', function () {
 describe("server route: /users/profile", function() {
   it("should not create a user profile when the email already exists in the database", function (done) {
     agent
-      .post(`/users/profile/`)
+      .post(`/users/profile`)
       .send({
         username: "iyutest2",
         email: "iyutest2@gmail.com",
@@ -36,13 +36,13 @@ describe("server route: /users/profile", function() {
   });
 });
 
-describe('server route: /users/profile/:userId', function () {
-  it('should return a user profile entry from the database if it exists', function (done) {
+describe('server route: /users/profile/id/:userId', function () {
+  it('should return a user profile entry from the database searched by the id column if it exists', function (done) {
     let randomInt = Math.floor(Math.random() * (10000000 - 1 + 1)) + 1;
     agent
-      .get(`/users/profile/${randomInt}`)
+      .get(`/users/profile/id/${randomInt}`)
       .expect(function (result) {
-        res.body.id = randomInt
+        result.body.id = randomInt
       })
       .expect(200, done());
   });
@@ -52,4 +52,21 @@ describe('server route: /users/profile/:userId', function () {
       .get('/users/profile/0')
       .expect(404, done());
   })
+});
+
+describe("server route: /users/profile/email/:userEmail", function() {
+  it("should return a user profile entry from the database searched by the email column if it exists", function(done) {
+    let email = 'tester@gmail.com';
+    agent
+      .get(`/users/profile/email/${email}`)
+      .expect(function(result) {
+        result.email = email;
+      })
+      .expect(200, done());
+  });
+
+  it("should return a 404 error if the user profile does not exist", function(done) {
+    agent.get("/users/profile/email/sdlkfjsdflkj@mail.com")
+    .expect(404, done());
+  });
 });
