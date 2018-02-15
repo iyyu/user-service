@@ -1,14 +1,16 @@
 require("dotenv").load();
 require("newrelic");
-const db = require('./../database/db-index.js');
+const db = require('./../database/db-pooling-queries.js');
+// const db = require('./../database/db-index.js');
 const express = require('express');
 const app = express();
 const toDate = require('normalize-date');
 const timestamp = require('unix-timestamp');
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT;
+const PORT = 4000 || process.env.PORT;
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => res.status(200).end());
 

@@ -1,0 +1,15 @@
+config:
+  target: 'http://127.0.0.1:4000'
+  phases:
+    - duration: 10
+      arrivalRate: 450
+      name: "Sustained max load"
+  defaults:
+    headers:
+scenarios:
+  # - flow:
+  #   - get:
+  #       url: "/users/profile/id/10000000"
+  - flow: 
+    - get: 
+        url: "/users/profile/email/iyutest2@gmail.com"

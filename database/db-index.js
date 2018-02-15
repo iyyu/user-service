@@ -1,6 +1,6 @@
 require("dotenv").load();
 const pg = require('pg');
-const connectionString = process.env.DATABASE_URL;
+const connectionString = process.env.LOCAL_DATABASE_URL;
 const client = new pg.Client(connectionString);
 
 client
@@ -23,6 +23,7 @@ const insertToUsers = obj => {
         resolve(newUserProfile);
       })
       .catch(err => {
+        console.timeEnd(`insertion of ${obj.username}`);
         console.error(err.stack);
         reject(err);
       });
@@ -40,14 +41,15 @@ const selectUserByUserId = userId => {
     client
       .query(query)
       .then(results => {
+        console.time(`search for ${userId}`);
         if (results.rows.length) {
-          console.timeEnd(`search for ${userId}`);
           resolve(results.rows[0]);
         } else {
           reject(results);
         }
       })
       .catch(err => {
+        console.time(`search for ${userId}`);
         console.error(err.stack);
         reject(err);
       });
