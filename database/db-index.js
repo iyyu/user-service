@@ -15,15 +15,10 @@ const insertToUsers = obj => {
     values: [obj.username, obj.email, obj.country, obj.birthdate, obj.lastlogin, obj.isartist, obj.ispremium, obj.image]
   };
   return new Promise((resolve, reject) => {
-    console.time(`insertion of ${obj.username}`);
     client
       .query(query)
-      .then(newUserProfile => {
-        console.timeEnd(`insertion of ${obj.username}`);
-        resolve(newUserProfile);
-      })
+      .then(newUserProfile => resolve(newUserProfile))
       .catch(err => {
-        console.timeEnd(`insertion of ${obj.username}`);
         console.error(err.stack);
         reject(err);
       });
@@ -32,7 +27,6 @@ const insertToUsers = obj => {
 
 /* Selection queries */
 const selectUserByUserId = userId => {
-  console.time(`search for ${userId}`);
   const query = {
     text: 'SELECT * FROM users WHERE id = $1',
     values: [userId]
@@ -40,16 +34,8 @@ const selectUserByUserId = userId => {
   return new Promise((resolve, reject) => {
     client
       .query(query)
-      .then(results => {
-        console.time(`search for ${userId}`);
-        if (results.rows.length) {
-          resolve(results.rows[0]);
-        } else {
-          reject(results);
-        }
-      })
+      .then(results => results.rows.length ? resolve(results.rows[0]) : resolve(results.rows))
       .catch(err => {
-        console.time(`search for ${userId}`);
         console.error(err.stack);
         reject(err);
       });
@@ -57,7 +43,6 @@ const selectUserByUserId = userId => {
 }
 
 const selectUserByEmail = userEmail => {
-  console.time(`search for ${userEmail}`);
   let query = {
     text: "SELECT * FROM users WHERE email = $1",
     values: [JSON.parse(userEmail)] // needed to not be a string since PostgreSQL is preferential to single-quotes and passing the email in would have resulted in double-quotes
@@ -65,14 +50,7 @@ const selectUserByEmail = userEmail => {
   return new Promise((resolve, reject) => {
     client
       .query(query)
-      .then(results => {
-        if (results.rows.length) {
-          console.timeEnd(`search for ${userEmail}`);
-          resolve(results.rows[0]);
-        } else {
-          resolve(results.rows);
-        }
-      })
+      .then(results => (results.rows.length ? resolve(results.rows[0]) : resolve(results.rows)))
       .catch(err => {
         console.error(err.stack);
         reject(err);

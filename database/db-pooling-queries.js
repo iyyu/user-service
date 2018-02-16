@@ -1,10 +1,12 @@
 const pool = require ('./db-pooling.js');
 
 /* Insertion queries */
-const insertToUsers = obj => {
+const insertToUsers = profile => {
+  let values = { username, email, country, birthdate, lastlogin, isartist, ispremium, image } = profile;
+  values.image = values.image || "http://www.iconninja.com/files/987/345/316/twitter-and-settings-egg-proffile-social-bird-icon.png";
   const query = {
     text: "INSERT INTO users (username, email, country, birthdate, lastlogin, isartist, ispremium, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
-    values: [obj.username, obj.email, obj.country, obj.birthdate, obj.lastlogin, obj.isartist, obj.ispremium, obj.image]
+    values: values
   };
   pool.connect((err, client, release) => {
     if (err) {
@@ -14,7 +16,7 @@ const insertToUsers = obj => {
       release();
       return err ? console.error("Error executing query", err.stack) : result;
     });
-});
+  });
 };
 
 /* Selection queries */
@@ -37,7 +39,8 @@ const selectUserByUserId = userId => {
 const selectUserByEmail = userEmail => {
   let query = {
     text: "SELECT * FROM users WHERE email = $1",
-    values: [JSON.parse(userEmail)] // PostgreSQL is preferential to single-quotes and passing the email in would have resulted in double-quotes, so this needs to be a non-string
+    values: [JSON.parse(userEmail)] 
+    // PostgreSQL is preferential to single-quotes and passing the email in would have resulted in double-quotes, so this needs to be a non-string
   };
   return new Promise((resolve, reject) => {
     pool

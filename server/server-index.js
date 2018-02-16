@@ -1,7 +1,6 @@
 require("dotenv").load();
 require("newrelic");
 const db = require('./../database/db-pooling-queries.js');
-// const db = require('./../database/db-index.js');
 const express = require('express');
 const app = express();
 const toDate = require('normalize-date');
