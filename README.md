@@ -19,6 +19,7 @@ The goal of this project was to build a service-oriented system and in particula
 > pg-start
 
 To test, run `npm run test`
+
 To see test coverage, run `npm run test-coverage`
 
 ## Requirements
