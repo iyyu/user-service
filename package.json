@@ -1,7 +1,7 @@
 {
-  "name": "spotifred",
+  "name": "spotifred-user-service",
   "version": "1.0.0",
-  "description": "Spotifred services unite!",
+  "description": "Microservice persisting and maintaining user information.",
   "main": "server/server-index.js",
   "scripts": {
     "start": "NODE_ENV=production nodemon server/server-index.js",

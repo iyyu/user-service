@@ -1,9 +1,10 @@
-const pool = require ('./db-pooling.js');
+require("dotenv").config();
+const pool = require("./db-pooling.js");
 
 /* Insertion queries */
 const insertToUsers = profile => {
   let values = { username, email, country, birthdate, lastlogin, isartist, ispremium, image } = profile;
-  values.image = values.image || "http://www.iconninja.com/files/987/345/316/twitter-and-settings-egg-proffile-social-bird-icon.png";
+  values.image = values.image || process.env.DEFAULT_PROFILE_IMAGE;
   const query = {
     text: "INSERT INTO users (username, email, country, birthdate, lastlogin, isartist, ispremium, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
     values: values
@@ -22,7 +23,7 @@ const insertToUsers = profile => {
 /* Selection queries */
 const selectUserByUserId = userId => {
   const query = {
-    text: 'SELECT * FROM users WHERE id = $1',
+    text: "SELECT * FROM users WHERE id = $1",
     values: [userId]
   };
   return new Promise((resolve, reject) => {
@@ -55,7 +56,7 @@ const selectUserByEmail = userEmail => {
 
 const selectActiveUsersByDates = (startUnix, endUnix) => {
   console.time(`search for users active between ${startUnix} and ${endUnix}`);
-  let query = {
+  const query = {
     text: "SELECT * FROM users WHERE lastlogin BETWEEN $1 AND $2",
     values: [startUnix, endUnix]
   };
