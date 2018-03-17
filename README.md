@@ -1,35 +1,28 @@
-# Project Name
+# Spotifred-User-Service
 
-The project description
+Microservice source of truth for user profile information.
 
-## Roadmap
+## High-Level Goals
 
-View the project roadmap [here](LINK_TO_DOC)
+The goal of this project was to build a service-oriented system and in particular, this microservice was to:
+
+- Maintain 10+ million user profiles in the database
+- Respond to a GET request under 100ms
+- Update database upon simulated user login
+
+## Usage
+
+> npm install
+> npm start
+> pg-start
+To test, run `npm run test`
+To see test coverage, run `npm run test-coverage`
+
+## Requirements
+
+- Node 9.3.0^
+- PostgreSQL 10.1^
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
-
-# Table of Contents
-
-1. [Usage](#Usage)
-1. [Requirements](#requirements)
-1. [Development](#development)
-    1. [Installing Dependencies](#installing-dependencies)
-    1. [Tasks](#tasks)
-
-## Usage
-
-> Some usage instructions
-
-## Requirements
-
-- Node 6.9.x
-- Redis 3.2.x
-- Postgresql 9.6.x
-- etc
-
-## Other Information
-
-(TODO: fill this out with details about your project. Suggested ideas: architecture diagram, schema, and any other details from your app plan that sound interesting.)
-
