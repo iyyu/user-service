@@ -5,6 +5,7 @@ const pool = require("./db-pooling.js");
 const insertToUsers = profile => {
   let values = { username, email, country, birthdate, lastlogin, isartist, ispremium, image } = profile;
   values.image = values.image || process.env.DEFAULT_PROFILE_IMAGE;
+  values.lastlogin = Math.round(new Date().getTime() / 1000);
   const query = {
     text: "INSERT INTO users (username, email, country, birthdate, lastlogin, isartist, ispremium, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
     values: values
